@@ -64,4 +64,4 @@ $graph:
           glob: .
     requirements:
       DockerRequirement:
-        dockerPull: rconway/convert-app:latest
+        dockerPull: rconway/convert-app:main
