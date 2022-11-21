@@ -57,7 +57,7 @@ resizeUrl() {
   filename="$(basename "${url}")"
   filestem="${filename%.*}"
   ext="${filename##*.}"
-  outputFile="${filestem}-resize-${size}.${ext}"
+  outputFile="${filestem}-resize.${ext}"
 
   convert "${url}" -resize "${size}" "${OUTPUT_DIR}/${outputFile}"
 
