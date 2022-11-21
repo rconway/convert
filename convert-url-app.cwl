@@ -14,16 +14,10 @@ $graph:
     inputs:
       fn:
         type: string
-        inputBinding:
-          position: 1
       url:
         type: string
-        inputBinding:
-          position: 2
       size:
         type: string
-        inputBinding:
-          position: 3
     outputs:
       - id: wf_outputs
         type: Directory
