@@ -3,7 +3,7 @@ $namespaces:
   s: https://schema.org/
 schemas:
   - http://schema.org/version/9.0/schemaorg-current-http.rdf
-s:softwareVersion: 0.0.1
+s:softwareVersion: 0.0.2
 
 $graph:
   # Workflow entrypoint
@@ -58,4 +58,4 @@ $graph:
           glob: .
     requirements:
       DockerRequirement:
-        dockerPull: rconway/convert-app:main
+        dockerPull: rconway/convert:main
