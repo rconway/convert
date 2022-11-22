@@ -1,0 +1,44 @@
+{
+  "stac_version": "1.0.0",
+  "type": "Feature",
+  "id": "eoepca-logo",
+  "geometry": {
+    "type": "Polygon",
+    "coordinates": [
+      [
+        [30.155974613579858, 28.80949327971016],
+        [30.407037927198104, 29.805008695373978],
+        [31.031551610920825, 29.815791988006527],
+        [31.050481437029678, 28.825387639743422],
+        [30.155974613579858, 28.80949327971016]
+      ]
+    ]
+  },
+  "properties": {
+    "created": "2022-11-22T08:12:30.713Z",
+    "datetime": "2022-11-22T08:12:30.713Z",
+    "updated": "2022-11-22T08:12:30.713Z"
+  },
+  "bbox": [30.155974613579858, 28.80949327971016, 31.050481437029678, 29.815791988006527],
+  "assets": {
+    "output": {
+      "type": "image/png",
+      "roles": ["data"],
+      "href": "eoepca-logo.png",
+      "file:size": 16564
+    }
+  },
+  "links": [{
+    "type": "application/json",
+    "rel": "parent",
+    "href": "catalog.json"
+  }, {
+    "type": "application/geo+json",
+    "rel": "self",
+    "href": "https://raw.githubusercontent.com/rconway/convert/main/stac/eoepca-logo.png"
+  }, {
+    "type": "application/json",
+    "rel": "root",
+    "href": "catalog.json"
+  }]
+}
