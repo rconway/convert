@@ -48,6 +48,13 @@ resize() {
 
 resizeDirectory() {
   echo "resizeDirectory: $@"
+  dir="$1"
+  size="$2"
+
+  stacItemFile="$(cat "${dir}/catalog.json" | jq -r '.links[] | select(.rel == "item") | .href')"
+  inputFile="$(cat "${dir}/${stacItemFile}" | jq -r 'first(.assets[]).href')"
+
+  resizeUrl "${dir}/${inputFile}" "${size}"
 }
 
 resizeUrl() {

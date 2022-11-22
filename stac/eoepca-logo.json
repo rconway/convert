@@ -21,7 +21,7 @@
   },
   "bbox": [30.155974613579858, 28.80949327971016, 31.050481437029678, 29.815791988006527],
   "assets": {
-    "output": {
+    "logo": {
       "type": "image/png",
       "roles": ["data"],
       "href": "eoepca-logo.png",
