@@ -11,15 +11,20 @@ onExit() {
 }
 trap onExit EXIT
 
+# the output directory is the starting directory (by convention)
 OUTPUT_DIR="${ORIG_DIR}"
 
+# main - entrypoint
 main() {
   echo "Invocation args: $0 $@"
   fn="$1" && shift
+  # switch on request function
   case "${fn}" in
+    # resize image
     "resize" )
       resize "$@"
       ;;
+    # else error
     * )
       echo "ERROR: Unknown function = ${fn}"
       return 1
@@ -27,18 +32,23 @@ main() {
   esac
 }
 
+# function 'resize'
 resize() {
   echo "resize with args: $@"
   srcType="$1" && shift
+  # switch on the input type
   case "${srcType}" in
+    # stac catalogue with image assets
     "--dir" )
       srcDir="$1" && shift
       resizeDirectory "${srcDir}" "$@"
       ;;
+    # url to image
     "--url" )
       srcUrl="$1" && shift
       resizeUrl "${srcUrl}" "$@"
       ;;
+    # else error
     * )
       echo "ERROR: Unknown source type = ${srcType}"
       return 1
@@ -46,70 +56,72 @@ resize() {
   esac
 }
 
+# resize from an input stac catalog
 resizeDirectory() {
   echo "resizeDirectory: $@"
   dir="$1"
   size="$2"
 
-  stacItemFile="$(cat "${dir}/catalog.json" | jq -r '.links[] | select(.rel == "item") | .href')"
+  # get the name of the stac item file (first entry only - i.e. only single image supported)
+  stacItemFile="$(cat "${dir}/catalog.json" | jq -r '[.links[] | select(.rel == "item")][0].href')"
+  # ...and convert from relative to absolute path
   stacItemFileFull="${dir}/${stacItemFile}"
+
+  # get the name of the first asset (only single image supported)
   inputFile="$(cat "${stacItemFileFull}" | jq -r 'first(.assets[]).href')"
+  # ...and convert from relative to absolute path
   inputFileFull="$(dirname "${stacItemFileFull}")/${inputFile}"
 
-  # echo "Input dir: ${dir}" >>"${OUTPUT_DIR}/output.txt"
-  # ls -lR "${dir}" >>"${OUTPUT_DIR}/output.txt"
-
+  # invoke the resize on the resulting url
   resizeUrl "${inputFileFull}" "${size}"
 }
 
-# resizeUrl2() {
-#   echo "resizeUrl: $@"
-#   url="$1"
-#   size="$2"
-#   filename="$(basename "${url}")"
-#   filestem="${filename%.*}"
-#   ext="${filename##*.}"
-#   outputFileTmp="${filestem}-resize.${ext}"
-
-#   outputFile="output.txt"
-#   echo "Output dir: ${OUTPUT_DIR}" >>"${OUTPUT_DIR}/${outputFile}"
-
-#   convert "${url}" -resize "${size}" "${OUTPUT_DIR}/${outputFileTmp}" >>"${OUTPUT_DIR}/${outputFile}" 2>&1
-
-#   ls -lR >>"${OUTPUT_DIR}/${outputFile}"
-
-#   now="$(date +%s.%N)"
-#   mimetype="$(file -b --mime-type "${OUTPUT_DIR}/${outputFile}")"
-
-#   createStacItem "${now}" "${outputFile}" "${mimetype}"
-#   createStacCatalogRoot "${outputFile}"
-# }
-
+# resize from an input url
 resizeUrl() {
   echo "resizeUrl: $@"
   url="$1"
   size="$2"
+
+  # deduce the filename, stem and extension
   filename="$(basename "${url}")"
   filestem="${filename%.*}"
   ext="${filename##*.}"
+  # ...and use to construct the output filename
   outputFile="${filestem}-resize.${ext}"
 
+  # use 'convert' (ImageMagick) to perform the resize
   convert "${url}" -resize "${size}" "${OUTPUT_DIR}/${outputFile}"
 
+  # outputs as a stac catalogue
+  createOutputStac "${outputFile}"
+}
+
+# create stac catalogue to represent the output file
+createOutputStac() {
+  outputFile="${1}"
+
+  # gather inputs
   now="$(date +%s.%N)"
   mimetype="$(file -b --mime-type "${OUTPUT_DIR}/${outputFile}")"
 
+  # create
   createStacItem "${now}" "${outputFile}" "${mimetype}"
   createStacCatalogRoot "${outputFile}"
 }
 
+# create the output stac item file
 createStacItem() {
   now="${1}"
   filename="${2}"
   mimetype="${3}"
+
+  # get the 'now' timestamp as an xml time representation
   dateNow="$(date -u --date=@${now} +%Y-%m-%dT%T.%03NZ)"
+  # name of stac item file based on the name of the asset
   filestem="${filename%.*}"
   itemfile="${filestem}.json"
+
+  # write the stac item file output, referencing the asset
   cat - <<EOF > "${OUTPUT_DIR}/${itemfile}"
 {
   "stac_version": "1.0.0",
@@ -158,10 +170,15 @@ createStacItem() {
 EOF
 }
 
+# create the stac root catalog file
 createStacCatalogRoot() {
   filename="${1}"
+
+  # name of stac item file based on the name of the asset
   filestem="${filename%.*}"
   itemfile="${filestem}.json"
+
+  # write the stac root catalog file output, referencing the item file
   cat - <<EOF > "${OUTPUT_DIR}/catalog.json"
 {
   "stac_version": "1.0.0",
@@ -181,4 +198,5 @@ createStacCatalogRoot() {
 EOF
 }
 
+# call the main entrypoint
 main "$@"
