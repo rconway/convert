@@ -8,13 +8,13 @@ s:softwareVersion: 0.0.2
 $graph:
   # Workflow entrypoint
   - class: Workflow
-    doc: Convert Dir
-    id: convert-dir
-    label: convert dir app
+    doc: Convert Stac
+    id: convert-stac
+    label: convert stac app
     inputs:
       fn:
         type: string
-      dir:
+      stac:
         type: Directory
       size:
         type: string
@@ -28,12 +28,12 @@ $graph:
         run: "#convert"
         in:
           fn: fn
-          dir: dir
+          stac: stac
           size: size
         out:
           - results
 
-  # convert.sh - takes input args `--dir`
+  # convert.sh - takes input args `--stac`
   - class: CommandLineTool
     id: convert
     baseCommand: convert.sh
@@ -42,11 +42,11 @@ $graph:
         type: string
         inputBinding:
           position: 1
-      dir:
+      stac:
         type: Directory
         inputBinding:
           position: 2
-          prefix: --dir
+          prefix: --stac
       size:
         type: string
         inputBinding:
