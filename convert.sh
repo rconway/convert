@@ -52,12 +52,14 @@ resizeDirectory() {
   size="$2"
 
   stacItemFile="$(cat "${dir}/catalog.json" | jq -r '.links[] | select(.rel == "item") | .href')"
-  inputFile="$(cat "${dir}/${stacItemFile}" | jq -r 'first(.assets[]).href')"
+  stacItemFileFull="${dir}/${stacItemFile}"
+  inputFile="$(cat "${stacItemFileFull}" | jq -r 'first(.assets[]).href')"
+  inputFileFull="$(dirname "${stacItemFileFull}")/${inputFile}"
 
   echo "Input dir: ${dir}" >>"${OUTPUT_DIR}/output.txt"
   ls -lR "${dir}" >>"${OUTPUT_DIR}/output.txt"
 
-  resizeUrl2 "${dir}/${inputFile}" "${size}"
+  resizeUrl2 "${inputFileFull}" "${size}"
 }
 
 resizeUrl2() {
