@@ -39,9 +39,9 @@ resize() {
   # switch on the input type
   case "${srcType}" in
     # stac catalogue with image assets
-    "--dir" )
-      srcDir="$1" && shift
-      resizeDirectory "${srcDir}" "$@"
+    "--stac" )
+      srcStac="$1" && shift
+      resizeStac "${srcStac}" "$@"
       ;;
     # url to image
     "--url" )
@@ -57,8 +57,8 @@ resize() {
 }
 
 # resize from an input stac catalog
-resizeDirectory() {
-  echo "resizeDirectory: $@"
+resizeStac() {
+  echo "resizeStac: $@"
   dir="$1"
   size="$2"
 

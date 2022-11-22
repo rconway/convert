@@ -11,7 +11,7 @@ onExit() {
 trap onExit EXIT
 
 main() {
-  cwltool --outdir out convert-dir-app.cwl#convert --fn resize --dir ./stac --size "50%"
+  cwltool --outdir out convert-stac-app.cwl#convert --fn resize --stac ./stac --size "50%"
 }
 
 main "$@"
