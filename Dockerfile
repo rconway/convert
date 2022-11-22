@@ -1,6 +1,6 @@
 FROM ubuntu
 
-RUN apt-get update && apt-get -y install curl imagemagick
+RUN apt-get update && apt-get -y install curl imagemagick file
 
 WORKDIR /app
 
