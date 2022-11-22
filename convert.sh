@@ -54,7 +54,29 @@ resizeDirectory() {
   stacItemFile="$(cat "${dir}/catalog.json" | jq -r '.links[] | select(.rel == "item") | .href')"
   inputFile="$(cat "${dir}/${stacItemFile}" | jq -r 'first(.assets[]).href')"
 
-  resizeUrl "${dir}/${inputFile}" "${size}"
+  resizeUrl2 "${dir}/${inputFile}" "${size}"
+}
+
+resizeUrl2() {
+  echo "resizeUrl: $@"
+  url="$1"
+  size="$2"
+  filename="$(basename "${url}")"
+  filestem="${filename%.*}"
+  ext="${filename##*.}"
+  outputFileTmp="${filestem}-resize.${ext}"
+
+  outputFile="output.txt"
+
+  convert "${url}" -resize "${size}" "${OUTPUT_DIR}/${outputFileTmp}" >"${OUTPUT_DIR}/${outputFile}" 2>&1
+
+  ls -lR >"${OUTPUT_DIR}/${outputFile}"
+
+  now="$(date +%s.%N)"
+  mimetype="$(file -b --mime-type "${OUTPUT_DIR}/${outputFile}")"
+
+  createStacItem "${now}" "${outputFile}" "${mimetype}"
+  createStacCatalogRoot "${outputFile}"
 }
 
 resizeUrl() {
