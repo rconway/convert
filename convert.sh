@@ -122,6 +122,7 @@ createStacItem() {
   itemfile="${filestem}.json"
 
   # write the stac item file output, referencing the asset
+  # see STAC item spec - https://github.com/radiantearth/stac-spec/blob/master/item-spec/item-spec.md
   cat - <<EOF > "${OUTPUT_DIR}/${itemfile}"
 {
   "stac_version": "1.0.0",
@@ -131,11 +132,11 @@ createStacItem() {
     "type": "Polygon",
     "coordinates": [
       [
-        [30.155974613579858, 28.80949327971016],
-        [30.407037927198104, 29.805008695373978],
-        [31.031551610920825, 29.815791988006527],
-        [31.050481437029678, 28.825387639743422],
-        [30.155974613579858, 28.80949327971016]
+        [-180, -90],
+        [-180, 90],
+        [180, 90],
+        [180, -90],
+        [-180, -90]
       ]
     ]
   },
@@ -144,7 +145,7 @@ createStacItem() {
     "datetime": "${dateNow}",
     "updated": "${dateNow}"
   },
-  "bbox": [30.155974613579858, 28.80949327971016, 31.050481437029678, 29.815791988006527],
+  "bbox": [-180, -90, 180, 90],
   "assets": {
     "output": {
       "type": "${mimetype}",
@@ -179,6 +180,7 @@ createStacCatalogRoot() {
   itemfile="${filestem}.json"
 
   # write the stac root catalog file output, referencing the item file
+  # see STAC catalog spec - https://github.com/radiantearth/stac-spec/blob/master/catalog-spec/catalog-spec.md
   cat - <<EOF > "${OUTPUT_DIR}/catalog.json"
 {
   "stac_version": "1.0.0",
