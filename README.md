@@ -2,6 +2,19 @@
 
 This repo provides a simple example Application Package in accordance with the [OGC Best Practice for Application Packages](https://docs.ogc.org/bp/20-089r1.html).
 
+- [convert - Example Application Package](#convert---example-application-package)
+  - [Application Implementation - convert.sh](#application-implementation---convertsh)
+    - [Outputs](#outputs)
+    - [resize --url](#resize---url)
+    - [resize --stac](#resize---stac)
+  - [Application Container Image - rconway/convert](#application-container-image---rconwayconvert)
+  - [Application CWL](#application-cwl)
+    - [CommandLineTool](#commandlinetool)
+    - [Workflow](#workflow)
+  - [Local Execution](#local-execution)
+    - [--url](#--url)
+    - [--stac](#--stac)
+
 The `convert` application package comprises these parts:
 * Application Implementation<br>
   A `bash` script (`convert.sh`) that implements the application functionality
@@ -47,7 +60,7 @@ The `resize --url` operation is performed by directly invoking the convert utili
 convert https://eoepca.org/media_portal/images/logo6_med.original.png 50%
 ```
 
-## resize --stac
+### resize --stac
 
 In this case the argument supplied as `--stac <stac-catalog>` is an input directory within which it is expected to find a static STAC catalogue. The file `<stac-catalog>/catalog.json` is expected to exist, from where the input asset can be discovered. For simplicity, the first asset in the first STAC item is taken.
 
