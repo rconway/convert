@@ -1,15 +1,15 @@
 - [`convert` - Example Application Package](#convert---example-application-package)
   - [Application Implementation - `convert.sh`](#application-implementation---convertsh)
     - [Outputs](#outputs)
-    - [`resize --url`](#resize---url)
-    - [`resize --stac`](#resize---stac)
+    - [`resize --url` implementation](#resize---url-implementation)
+    - [`resize --stac` implementation](#resize---stac-implementation)
   - [Application Container Image - `rconway/convert`](#application-container-image---rconwayconvert)
   - [Application CWL](#application-cwl)
     - [`CommandLineTool`](#commandlinetool)
     - [`Workflow`](#workflow)
   - [Local Execution](#local-execution)
-    - [`resize --url`](#resize---url-1)
-    - [`resize --stac`](#resize---stac-1)
+    - [local: `resize --url`](#local-resize---url)
+    - [local: `resize --stac`](#local-resize---stac)
 
 # `convert` - Example Application Package
 
@@ -52,7 +52,7 @@ The convert.sh script names the resized output file by reusing the name of the i
 
 The outputs must be presented as a STAC catalog. Thus, the application must accompany the output image with STAC catalog and item files that reference the image asset.
 
-### `resize --url`
+### `resize --url` implementation
 
 The `resize --url` operation is performed by directly invoking the convert utility with the supplied url and size. For example...
 
@@ -60,7 +60,7 @@ The `resize --url` operation is performed by directly invoking the convert utili
 convert https://eoepca.org/media_portal/images/logo6_med.original.png 50%
 ```
 
-### `resize --stac`
+### `resize --stac` implementation
 
 In this case the argument supplied as `--stac <stac-catalog>` is an input directory within which it is expected to find a static STAC catalogue. The file `<stac-catalog>/catalog.json` is expected to exist, from where the input asset can be discovered. For simplicity, the first asset in the first STAC item is taken.
 
@@ -206,7 +206,7 @@ In the simplest case, the source can be provided as an existing STAC catalog, or
 
 For testing and experimentation, the application package can be executed locally using `cwltool`.
 
-### `resize --url`
+### local: `resize --url`
 
 ```
 cwltool --outdir out convert-url-app.cwl#convert \
@@ -215,7 +215,7 @@ cwltool --outdir out convert-url-app.cwl#convert \
   --size "50%"
 ```
 
-### `resize --stac`
+### local: `resize --stac`
 
 ```
 cwltool --outdir out convert-stac-app.cwl#convert \
@@ -224,4 +224,6 @@ cwltool --outdir out convert-stac-app.cwl#convert \
   --size "50%"
 ```
 
-> NOTE that, since the application package is executed outside the context of the ADES stage-in functionality, the `--stac` must be provided as 'pre-staged-in' STAC catalog directory.
+> NOTE<br>
+> Since the application package is executed outside the context of the ADES stage-in functionality, the `--stac` must be provided as 'pre-staged-in' STAC catalog directory.<br>
+> For this purpose, a simple STAC catalogue has been created in the [`stac/`](stac/) directory of this repository.
