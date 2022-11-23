@@ -1,7 +1,3 @@
-# convert - Example Application Package
-
-This repo provides a simple example Application Package in accordance with the [OGC Best Practice for Application Packages](https://docs.ogc.org/bp/20-089r1.html).
-
 - [convert - Example Application Package](#convert---example-application-package)
   - [Application Implementation - convert.sh](#application-implementation---convertsh)
     - [Outputs](#outputs)
@@ -14,6 +10,10 @@ This repo provides a simple example Application Package in accordance with the [
   - [Local Execution](#local-execution)
     - [--url](#--url)
     - [--stac](#--stac)
+
+# convert - Example Application Package
+
+This repo provides a simple example Application Package in accordance with the [OGC Best Practice for Application Packages](https://docs.ogc.org/bp/20-089r1.html).
 
 The `convert` application package comprises these parts:
 * Application Implementation<br>
