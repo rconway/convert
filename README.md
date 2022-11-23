@@ -10,6 +10,11 @@
   - [Local Execution](#local-execution)
     - [local: `resize --url`](#local-resize---url)
     - [local: `resize --stac`](#local-resize---stac)
+  - [ADES Execution](#ades-execution)
+    - [Deploy Application (`--url`)](#deploy-application---url)
+    - [Execute Application (`--url`)](#execute-application---url)
+    - [Deploy Application (`--stac`)](#deploy-application---stac)
+    - [Execute Application (`--stac`)](#execute-application---stac)
 
 # `convert` - Example Application Package
 
@@ -227,3 +232,70 @@ cwltool --outdir out convert-stac-app.cwl#convert \
 > NOTE<br>
 > Since the application package is executed outside the context of the ADES stage-in functionality, the `--stac` must be provided as 'pre-staged-in' STAC catalog directory.<br>
 > For this purpose, a simple STAC catalogue has been created in the [`stac/`](stac/) directory of this repository.
+
+## ADES Execution
+
+The application package can be deployed and executed on an ADES instance.
+
+> See also the [Deployment Guide Quick Example](https://deployment-guide.docs.eoepca.org/current/quickstart/quickstart/#quick-example) for more context.
+
+### Deploy Application (`--url`)
+
+```
+curl --request POST \
+  --url https://ades-open.<domain>/<user>/wps3/processes \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{"executionUnit": {"href": "https://raw.githubusercontent.com/rconway/convert/main/convert-url-app.cwl","type": "application/cwl"}}'
+```
+
+### Execute Application (`--url`)
+
+```
+curl --request POST \
+  --url https://ades-open.<domain>/<user>/wps3/processes/convert-url-0_1_1/execution \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --header 'prefer: respond-async' \
+  --data '{"inputs": {"fn": "resize","url":  "https://eoepca.org/media_portal/images/logo6_med.original.png","size": "50%"},"response":"raw"}'
+```
+
+### Deploy Application (`--stac`)
+
+```
+curl --request POST \
+  --url https://ades-open.<domain>/<user>/wps3/processes \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --data '{"executionUnit": {"href": "https://raw.githubusercontent.com/rconway/convert/main/convert-stac-app.cwl","type": "application/cwl"}}'
+```
+
+### Execute Application (`--stac`)
+
+Demonstration of ADES invocation with inputs as _STAC catalog_ and alternatively as _STAC item_ - noting that, after ADES stage-in, the application will always receive a STAC catalog as input.
+
+**Input as STAC catalog...**
+
+```
+curl --request POST \
+  --url https://ades-open.<domain>/<user>/wps3/processes/convert-stac-0_1_1/execution \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --header 'prefer: respond-async' \
+  --data '{"inputs": {"fn": "resize","stac":  "https://raw.githubusercontent.com/rconway/convert/main/stac/catalog.json","size": "50%"},"response":"raw"}'
+```
+
+> NOTE input STAC item [`catalog.json`](stac/catalog.json)
+
+**Input as STAC item...**
+
+```
+curl --request POST \
+  --url https://ades-open.<domain>/<user>/wps3/processes/convert-stac-0_1_1/execution \
+  --header 'accept: application/json' \
+  --header 'content-type: application/json' \
+  --header 'prefer: respond-async' \
+  --data '{"inputs": {"fn": "resize","stac":  "https://raw.githubusercontent.com/rconway/convert/main/stac/eoepca-logo.json","size": "50%"},"response":"raw"}'
+```
+
+> NOTE input STAC item [`eoepca-logo.json`](stac/eoepca-logo.json)
