@@ -1,17 +1,17 @@
-- [convert - Example Application Package](#convert---example-application-package)
-  - [Application Implementation - convert.sh](#application-implementation---convertsh)
+- [`convert` - Example Application Package](#convert---example-application-package)
+  - [Application Implementation - `convert.sh`](#application-implementation---convertsh)
     - [Outputs](#outputs)
-    - [resize --url](#resize---url)
-    - [resize --stac](#resize---stac)
-  - [Application Container Image - rconway/convert](#application-container-image---rconwayconvert)
+    - [`resize --url`](#resize---url)
+    - [`resize --stac`](#resize---stac)
+  - [Application Container Image - `rconway/convert`](#application-container-image---rconwayconvert)
   - [Application CWL](#application-cwl)
-    - [CommandLineTool](#commandlinetool)
-    - [Workflow](#workflow)
+    - [`CommandLineTool`](#commandlinetool)
+    - [`Workflow`](#workflow)
   - [Local Execution](#local-execution)
-    - [--url](#--url)
-    - [--stac](#--stac)
+    - [`resize --url`](#resize---url-1)
+    - [`resize --stac`](#resize---stac-1)
 
-# convert - Example Application Package
+# `convert` - Example Application Package
 
 This repo provides a simple example Application Package in accordance with the [OGC Best Practice for Application Packages](https://docs.ogc.org/bp/20-089r1.html).
 
@@ -23,7 +23,7 @@ The `convert` application package comprises these parts:
 * Application CWL<br>
   A CWL file that describes the application so that it can be deployed and executed in an OGC API Processes service
 
-## Application Implementation - convert.sh
+## Application Implementation - `convert.sh`
 
 The script is a wrapper around the `convert` utility from [ImageMagick](https://imagemagick.org/). The script implements a resize function that takes an image as input, and outputs a resized version of the image.
 
@@ -52,7 +52,7 @@ The convert.sh script names the resized output file by reusing the name of the i
 
 The outputs must be presented as a STAC catalog. Thus, the application must accompany the output image with STAC catalog and item files that reference the image asset.
 
-### resize --url
+### `resize --url`
 
 The `resize --url` operation is performed by directly invoking the convert utility with the supplied url and size. For example...
 
@@ -60,7 +60,7 @@ The `resize --url` operation is performed by directly invoking the convert utili
 convert https://eoepca.org/media_portal/images/logo6_med.original.png 50%
 ```
 
-### resize --stac
+### `resize --stac`
 
 In this case the argument supplied as `--stac <stac-catalog>` is an input directory within which it is expected to find a static STAC catalogue. The file `<stac-catalog>/catalog.json` is expected to exist, from where the input asset can be discovered. For simplicity, the first asset in the first STAC item is taken.
 
@@ -70,7 +70,7 @@ Once the input image has been identified then the convert utility is invoked sim
 convert <stac-catalog>/eoepca-logo.png 50%
 ```
 
-## Application Container Image - rconway/convert
+## Application Container Image - `rconway/convert`
 
 The application script `convert.sh` is packaged into a container image, along with its dependencies.
 
@@ -97,7 +97,7 @@ Two variants of the Application Package are provided to reflect use of either `-
 
 > It would be possible to express these exclusive inputs in a single application package (ref. [records and type unions](https://www.commonwl.org/user_guide/topics/inputs.html#inclusive-and-exclusive-inputs)) - but for simplicity separate application packages are used.
 
-### CommandLineTool
+### `CommandLineTool`
 
 Describes the convert.sh script in terms of its inputs as command-line arguments, and outputs.
 
@@ -149,7 +149,7 @@ The `CommandLineTool` for `--stac` varies only by replacing the `url` input with
           prefix: --stac
 ```
 
-### Workflow
+### `Workflow`
 
 Provides the entry-point to the application package, and includes the step to invoke `convert.sh` via the defined `CommandLineTool`.
 
@@ -206,7 +206,7 @@ In the simplest case, the source can be provided as an existing STAC catalog, or
 
 For testing and experimentation, the application package can be executed locally using `cwltool`.
 
-### --url
+### `resize --url`
 
 ```
 cwltool --outdir out convert-url-app.cwl#convert \
@@ -215,7 +215,7 @@ cwltool --outdir out convert-url-app.cwl#convert \
   --size "50%"
 ```
 
-### --stac
+### `resize --stac`
 
 ```
 cwltool --outdir out convert-stac-app.cwl#convert \
